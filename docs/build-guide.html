@@ -1,0 +1,668 @@
+<title>بناء موسى بالخطوات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one readable RTL column; each service is a "station" with steps beside an illustrated console frame */
+:root{
+  --bg:#f5f7f6; --surface:#ffffff; --ink:#14211f; --muted:#5b6b68; --line:#d9e1df;
+  --accent:#0f6b5f; --accent-soft:#e2f0ec; --mark:#e8890c; --mark-soft:#fff1dc;
+  --warn:#a5431a; --warn-soft:#fbe9e1; --code-bg:#eef2f1;
+  --chrome:#e7ecea; --ui:#f3f6f5; --ui-line:#d3dbd9;
+  --f-display:"Readex Pro","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1716; --surface:#16211f; --ink:#e4ecea; --muted:#9aaba7; --line:#2a3836;
+  --accent:#4fc2ad; --accent-soft:#16332e; --mark:#f2a23a; --mark-soft:#3a2a12;
+  --warn:#f08a5d; --warn-soft:#3a2219; --code-bg:#1d2a28;
+  --chrome:#1f2c2a; --ui:#1a2523; --ui-line:#2f3f3c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1716; --surface:#16211f; --ink:#e4ecea; --muted:#9aaba7; --line:#2a3836;
+  --accent:#4fc2ad; --accent-soft:#16332e; --mark:#f2a23a; --mark-soft:#3a2a12;
+  --warn:#f08a5d; --warn-soft:#3a2219; --code-bg:#1d2a28;
+  --chrome:#1f2c2a; --ui:#1a2523; --ui-line:#2f3f3c; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.85;direction:rtl;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:980px;margin-inline:auto}
+h1,h2,h3{font-family:var(--f-display);line-height:1.35;text-wrap:balance;margin:0}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--f-mono);font-size:.88em;direction:ltr;unicode-bidi:isolate}
+code{background:var(--code-bg);padding:1px 6px;border-radius:4px}
+
+/* header */
+header{padding-block:48px 28px;display:grid;gap:14px;border-bottom:1px solid var(--line)}
+.kicker{font-size:13px;color:var(--accent);font-weight:600;letter-spacing:.02em}
+h1{font-size:clamp(30px,5vw,46px)}
+.lede{max-width:62ch;color:var(--muted);font-size:17px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 20px;font-size:14px;color:var(--muted);margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+
+/* route map */
+.route{margin-block:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.route a{display:grid;gap:2px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink)}
+.route a:hover,.route a:focus-visible{border-color:var(--accent);outline:none}
+.route b{font-family:var(--f-display);font-size:15px}
+.route small{color:var(--muted);font-size:12.5px;line-height:1.5}
+.route .tag{font-size:11.5px;color:var(--accent);font-weight:600}
+
+.note{display:flex;gap:12px;padding:14px 16px;border-radius:10px;background:var(--warn-soft);color:var(--ink);font-size:15px}
+.note b{color:var(--warn)}
+.note.info{background:var(--accent-soft)}
+.note.info b{color:var(--accent)}
+
+/* station */
+section.station{padding-block:44px 8px;border-top:1px solid var(--line);margin-top:36px;display:grid;gap:22px}
+.st-head{display:grid;gap:8px}
+.st-head .meta{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-size:12.5px;padding:2px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+.pill.cost{background:var(--mark-soft);color:var(--ink)}
+h2{font-size:clamp(23px,3.4vw,30px)}
+.why{color:var(--muted);max-width:66ch}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px;align-items:start}
+@media (max-width:820px){.cols{grid-template-columns:minmax(0,1fr)}}
+
+ol.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:grid;gap:14px}
+ol.steps>li{counter-increment:s;display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;align-items:start}
+ol.steps>li::before{content:counter(s);font-family:var(--f-display);font-size:14px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--surface);margin-top:2px}
+.steps .sub{color:var(--muted);font-size:14.5px;display:block;margin-top:2px}
+
+.get{margin-top:6px;padding:14px 16px;border:1px dashed var(--accent);border-radius:10px;display:grid;gap:8px}
+.get h3{font-size:15px;color:var(--accent)}
+.kv{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;background:var(--code-bg);border-radius:8px;padding:8px 12px}
+.kv .mono{font-size:14px;word-break:break-all}
+.kv span.lbl{font-size:13.5px;color:var(--muted)}
+button.copy{font-family:var(--f-body);font-size:12.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:3px 10px;cursor:pointer}
+button.copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* illustrated console frame */
+figure.shot{margin:0;display:grid;gap:8px}
+.frame{border:1px solid var(--ui-line);border-radius:12px;overflow:hidden;background:var(--ui);direction:ltr;font-family:"Segoe UI",system-ui,sans-serif;font-size:12.5px;color:var(--ink);line-height:1.5}
+.bar{display:flex;align-items:center;gap:6px;padding:8px 10px;background:var(--chrome);border-bottom:1px solid var(--ui-line)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ui-line)}
+.url{flex:1;min-width:0;margin-left:8px;background:var(--surface);border-radius:6px;padding:3px 10px;color:var(--muted);font-family:var(--f-mono);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app{display:grid;grid-template-columns:120px minmax(0,1fr);min-height:230px}
+.side{background:var(--surface);border-right:1px solid var(--ui-line);padding:10px 8px;display:grid;align-content:start;gap:3px}
+.side div{padding:4px 8px;border-radius:5px;color:var(--muted);font-size:12px}
+.side .on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.main{padding:14px;display:grid;align-content:start;gap:10px;min-width:0}
+.main h4{margin:0;font-size:14px}
+.card{background:var(--surface);border:1px solid var(--ui-line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;min-width:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0}
+.row .v{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{display:inline-block;padding:5px 12px;border-radius:6px;background:var(--accent);color:var(--surface);font-weight:600;font-size:12px}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.field{border:1px solid var(--ui-line);border-radius:6px;padding:4px 8px;background:var(--surface);color:var(--muted);font-size:12px}
+.lab{font-size:11px;color:var(--muted)}
+.hl{position:relative;outline:2.5px solid var(--mark);outline-offset:3px;border-radius:6px}
+.hl::after{content:attr(data-n);position:absolute;top:-14px;right:-14px;width:22px;height:22px;border-radius:50%;background:var(--mark);color:#1b1205;font-weight:700;font-size:12px;display:grid;place-items:center;font-family:var(--f-display)}
+figcaption{font-size:13px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* env table */
+.envtable{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{text-align:right;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-display);font-size:13.5px;color:var(--muted);font-weight:500;background:var(--ui)}
+tr:last-child td{border-bottom:0}
+
+/* checklist */
+.check{display:grid;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.check label{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.check input{width:18px;height:18px;margin-top:6px;accent-color:var(--accent);flex:none}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+@media (prefers-reduced-motion:reduce){.progress i{transition:none}}
+
+dl.gloss{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:10px 18px;margin:0}
+dl.gloss dt{font-weight:600}
+dl.gloss dd{margin:0;color:var(--muted)}
+@media (max-width:520px){dl.gloss{grid-template-columns:minmax(0,1fr)}dl.gloss dd{margin-bottom:6px}.app{grid-template-columns:minmax(0,1fr)}.side{display:none}}
+footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+</style>
+<style>
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:stretch;margin-block:8px}
+.node{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:4px;position:relative}
+.node b{font-family:var(--f-display);font-size:15px}
+.node small{color:var(--muted);font-size:13px;line-height:1.6}
+.node .who{font-size:11.5px;font-weight:600;color:var(--accent)}
+.node.core{border-color:var(--accent);background:var(--accent-soft)}
+.arrow{color:var(--muted);font-size:13px;margin-top:6px}
+.prompt{background:var(--surface);border:1px solid var(--accent);border-radius:10px;overflow:hidden;margin-top:10px}
+.prompt .ph{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;background:var(--accent-soft);font-size:13.5px;font-weight:600;color:var(--accent)}
+.prompt pre{margin:0;padding:12px 14px;white-space:pre-wrap;font-family:var(--f-body);font-size:14.5px;line-height:1.8;max-height:none}
+.phase{font-family:var(--f-display);font-size:13px;color:var(--mark);font-weight:700;letter-spacing:.02em}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.split{grid-template-columns:minmax(0,1fr)}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:6px}
+.box h3{font-size:16px}
+.box ul{margin:0;padding-inline-start:20px}
+.toggle{display:inline-block;width:28px;height:15px;border-radius:99px;background:var(--accent);position:relative;vertical-align:middle}
+.toggle::after{content:"";position:absolute;right:2px;top:2px;width:11px;height:11px;border-radius:50%;background:var(--surface)}
+.toggle.off{background:var(--ui-line)}
+.toggle.off::after{right:auto;left:2px}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="kicker">مشروع موسى · دليل البناء الكامل</div>
+  <h1>بناء موسى بالخطوات</h1>
+  <p class="lede">من أول حساب لحد أول مكالمة حقيقية، بالأدوات: Claude Code وSupabase وVercel وElevenLabs وTwilio. كل خطوة فيها مين بيعملها: إنت ولا Claude Code. وكل جزء كود عليه رسالة جاهزة تنسخها وتبعتها لـClaude Code.</p>
+  <div class="legend">
+    <span><span class="hl" data-n="1" style="display:inline-block;width:16px;height:12px;margin-inline:10px 4px"></span> مكان الضغط في الرسم</span>
+    <span>⏱ التجهيز: 2–3 ساعات · البناء مع Claude Code: كام جلسة</span>
+  </div>
+</header>
+
+<div class="note info" style="margin-top:24px">
+  <b>تحديث على الخطة الأولى:</b>
+  <span>بالأدوات اللي اخترتها، <b>ElevenLabs Agents</b> هيعمل شغل 3 خدمات لوحده: يسمع العميل، ويفكر بالـLLM، ويرد بصوت. وكمان بيمنع المقاطعة وبيحوّل لموظف. يعني <b>مش محتاج</b> Deepgram ولا Azure ولا Railway من الدليل الأول. Twilio وSupabase زي ما هم.</span>
+</div>
+<div class="note" style="margin-top:12px">
+  <b>عن الصور:</b>
+  <span>دي رسومات توضيحية مبنية على شكل المواقع في 2026، مش لقطات شاشة حقيقية. لو زرار مش في مكانه، دوّر على نفس الكلمة بالإنجليزي.</span>
+</div>
+
+<!-- ============ MAP ============ -->
+<section class="station" id="map">
+  <div class="st-head">
+    <h2>الصورة الكاملة: المكالمة بتمشي إزاي</h2>
+    <p class="why">قبل ما تبدأ، افهم دور كل أداة. لو فهمت الرسمة دي، هتفهم أي خطوة جاية.</p>
+  </div>
+  <div class="flow">
+    <div class="node"><span class="who">العميل</span><b>بيتصل برقم البراند</b><small>رقمه المحلي في مصر أو السعودية، وبيتحوّل تلقائي لرقم Twilio.</small></div>
+    <div class="node"><span class="who">Twilio</span><b>بيستقبل المكالمة</b><small>كل براند ليه رقم. الرقم ده متوصل بموسى الخاص بالبراند.</small></div>
+    <div class="node core"><span class="who">ElevenLabs</span><b>موسى نفسه</b><small>يسمع، ويفهم اللهجة، ويرد بصوت، ويستنى العميل يخلص، ويحوّل لموظف لو لزم.</small></div>
+    <div class="node"><span class="who">Vercel</span><b>الموقع + الـWebhooks</b><small>أول ما المكالمة تبدأ، بيقول لموسى "ده براند كذا وده كلامه". ولما تخلص، بيحفظ ملخصها.</small></div>
+    <div class="node"><span class="who">Supabase</span><b>الذاكرة</b><small>بيانات البراندات، والأرقام، وسجل المكالمات، وحسابات العملاء.</small></div>
+    <div class="node"><span class="who">Claude Code</span><b>المبرمج</b><small>بيكتب كود الموقع والـWebhooks وقاعدة البيانات، ويرفعه على GitHub، وVercel ينشره.</small></div>
+  </div>
+  <div class="split">
+    <div class="box"><h3>إنت بتعمل</h3><ul><li>تفتح الحسابات وتدفع</li><li>تنسخ المفاتيح للخزنة</li><li>تضغط الزراير اللي في الدليل</li><li>تبعت رسائل جاهزة لـClaude Code</li><li>تجرب المكالمات وتقول رأيك</li></ul></div>
+    <div class="box"><h3>Claude Code بيعمل</h3><ul><li>شخصية موسى (الـPrompt) بالمصري والسعودي</li><li>جداول Supabase</li><li>موقع الـSaaS ولوحة تحكم البراندات</li><li>الـWebhooks اللي بتربط كل حاجة</li><li>إنشاء موسى جديد لكل براند تلقائي</li></ul></div>
+  </div>
+</section>
+
+<!-- ============ PHASE A ACCOUNTS ============ -->
+<section class="station" id="accounts">
+  <div class="st-head">
+    <span class="phase">المرحلة أ · إنت</span>
+    <h2>افتح الحسابات</h2>
+    <p class="why">كلها بتتفتح بنفس حساب GitHub أو Google عشان كله يبقى في مكان واحد.</p>
+  </div>
+  <div class="envtable">
+    <table>
+      <thead><tr><th>الأداة</th><th>اللينك</th><th>الباقة للبداية</th><th>التكلفة التقريبية</th></tr></thead>
+      <tbody>
+        <tr><td><b>GitHub</b></td><td><a href="https://github.com" target="_blank" rel="noopener">github.com</a></td><td>Free · عندك بالفعل</td><td>0</td></tr>
+        <tr><td><b>Claude Code</b></td><td><a href="https://claude.ai/code" target="_blank" rel="noopener">claude.ai/code</a></td><td>اشتراكك الحالي</td><td>ضمن اشتراكك</td></tr>
+        <tr><td><b>Twilio</b></td><td><a href="https://www.twilio.com/try-twilio" target="_blank" rel="noopener">twilio.com/try-twilio</a></td><td>اشحن 20$</td><td>الرقم 1–2$ في الشهر + الدقايق</td></tr>
+        <tr><td><b>ElevenLabs</b></td><td><a href="https://elevenlabs.io/app/agents" target="_blank" rel="noopener">elevenlabs.io</a></td><td>Free للتجربة، وبعدها Starter</td><td>حوالي 0.08$ للدقيقة + تكلفة الـLLM</td></tr>
+        <tr><td><b>Supabase</b></td><td><a href="https://supabase.com/dashboard" target="_blank" rel="noopener">supabase.com</a></td><td>Free</td><td>0</td></tr>
+        <tr><td><b>Vercel</b></td><td><a href="https://vercel.com/signup" target="_blank" rel="noopener">vercel.com</a></td><td>Hobby (مجاني)، وPro لما تبيع</td><td>0 في البداية</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note"><b>الأسعار:</b><span>دي أرقام تقريبية من مصادر 2026 وبتتغير. راجع صفحة الأسعار في كل موقع قبل ما تشترك. باقة Vercel المجانية للاستخدام الشخصي، فلما تبدأ تبيع لبراندات انقل لـPro.</span></div>
+</section>
+
+<!-- ============ PHASE B TWILIO ============ -->
+<section class="station" id="twilio">
+  <div class="st-head">
+    <span class="phase">المرحلة ب · إنت</span>
+    <h2>Twilio: اشتري الرقم واعمل مفتاح</h2>
+  </div>
+  <div class="cols">
+    <div>
+      <ol class="steps">
+        <li><span>سجّل في Twilio وأكّد الإيميل والموبايل. في أسئلة البداية اختار <b>Voice</b>.</span></li>
+        <li><span>اشحن الحساب: <b>Admin ← Billing ← Upgrade</b> بـ20$. الحساب التجريبي بيشغل رسالة "trial" في أول كل مكالمة.</span></li>
+        <li><span>اشتري رقم: <b>Phone Numbers ← Manage ← Buy a number</b>. اختار <b>United States</b> وعلّم على <b>Voice</b>، واضغط <b>Buy</b>.</span></li>
+        <li><span>فعّل التحويل لمصر والسعودية: <b>Voice ← Settings ← Geo permissions</b>، وعلّم على Egypt وSaudi Arabia.</span></li>
+        <li><span>اعمل مفتاح API مخصوص (أأمن من الـAuth Token): <b>Admin ← Account management ← API keys &amp; tokens ← Create API key</b>. الاسم <code>elevenlabs</code> والنوع <b>Standard</b>. انسخ الـ<b>SID</b> والـ<b>Secret</b>، الـSecret بيظهر مرة واحدة بس.</span></li>
+      </ol>
+      <div class="get">
+        <h3>تطلع من هنا بـ:</h3>
+        <div class="kv"><span class="mono">TWILIO_PHONE_NUMBER</span><span class="lbl">الرقم اللي اشتريته</span></div>
+        <div class="kv"><span class="mono">TWILIO_API_KEY_SID</span><span class="lbl">بيبدأ بـ SK</span></div>
+        <div class="kv"><span class="mono">TWILIO_API_KEY_SECRET</span><span class="lbl">يظهر مرة واحدة</span></div>
+      </div>
+    </div>
+    <figure class="shot">
+      <div class="frame" role="img" aria-label="رسم توضيحي لصفحة مفاتيح Twilio">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div class="url">console.twilio.com/…/api-keys</div></div>
+        <div class="app">
+          <div class="side"><div>Home</div><div class="hl" data-n="3">Phone Numbers</div><div class="hl" data-n="4">Voice › Settings</div><div class="on hl" data-n="5">API keys &amp; tokens</div></div>
+          <div class="main">
+            <div class="row"><h4>Create new API key</h4></div>
+            <div class="card">
+              <div class="lab">Friendly name</div><div class="field">elevenlabs</div>
+              <div class="lab">Key type</div><div class="field">Standard ▾</div>
+              <div class="row"><span></span><span class="btn">Create</span></div>
+            </div>
+            <div class="card"><div class="row"><span>SID</span><span class="v">SK••••••••••••</span></div><div class="row"><span>Secret</span><span class="v">•••••••• (shown once)</span></div></div>
+          </div>
+        </div>
+      </div>
+      <figcaption>Twilio: مفتاح API منفصل مخصوص لـElevenLabs.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ PHASE C ELEVENLABS ============ -->
+<section class="station" id="elevenlabs">
+  <div class="st-head">
+    <span class="phase">المرحلة ج · إنت + Claude Code</span>
+    <h2>ElevenLabs: اعمل موسى</h2>
+    <p class="why">دي أهم مرحلة. هتعمل موسى لأول براند بإيدك عشان تفهم كل إعداد. بعد كده Claude Code هيخلي الموقع يعمل ده لوحده لكل براند جديد.</p>
+  </div>
+  <div class="cols">
+    <div>
+      <ol class="steps">
+        <li><span>سجّل في <a href="https://elevenlabs.io/app/agents" target="_blank" rel="noopener">elevenlabs.io</a>، وروح لقسم <b>Agents</b> (ممكن اسمه <b>ElevenAgents</b>).</span></li>
+        <li><span>اضغط <b>+ New agent</b>، واختار <b>Blank template</b>، والاسم <code>Mousa - اسم البراند</code>.</span></li>
+        <li><span><b>First message:</b> سيبه <b>فاضي</b>. كده موسى هيستنى العميل يتكلم الأول، زي ما إنت عايز.
+          <span class="sub">لو حسيت إن السكوت في أول المكالمة غريب، نحط "ألو، السلام عليكم" بعد التجربة.</span></span></li>
+        <li><span><b>System prompt:</b> ابعت لـClaude Code الرسالة اللي تحت، وهيكتبلك شخصية موسى. انسخ النتيجة وحطها هنا.</span></li>
+        <li><span><b>Language:</b> الأساسية <b>Arabic</b>، وضيف في <b>Additional languages</b> English وFrench وUrdu وأي لغة تحتاجها.</span></li>
+        <li><span><b>Voice:</b> اضغط على الصوت، وروح <b>Voice Library</b>، وفلتر Arabic. اسمع واختار صوت راجل مصري وصوت راجل سعودي، واحفظ الاتنين في My Voices. حط المصري كصوت أساسي دلوقتي.</span></li>
+        <li><span><b>LLM:</b> اختار موديل سريع، زي Claude أو Gemini Flash. السرعة أهم من الذكاء الخارق هنا.</span></li>
+        <li><span><b>Knowledge base:</b> ارفع ملفات البراند (منيو، أسعار، سياسات، أسئلة شائعة) أو حط رابط موقعه. فعّل <b>Use RAG</b>.</span></li>
+        <li><span><b>Tools ← System tools</b>، فعّل:
+          <span class="sub"><span class="toggle"></span> End call · <span class="toggle"></span> Language detection · <span class="toggle"></span> Transfer to number (حط رقم خدمة العملاء بالصيغة الدولية، مثلًا ‎+20…، والشرط: "العميل صمم يكلم موظف بعد ما موسى حاول يساعده")</span></span></li>
+        <li><span><b>Advanced:</b> زوّد <b>Turn timeout</b> شوية (مثلًا 7 ثواني)، وخلي <b>Interruptions</b> شغالة، عشان لما العميل يتكلم موسى يسكت.</span></li>
+        <li><span>اضغط <b>Test AI agent</b> واتكلم معاه من المتصفح بالمصري وبالسعودي.</span></li>
+      </ol>
+      <div class="prompt">
+        <div class="ph"><span>رسالة لـClaude Code: شخصية موسى</span><button class="copy" type="button" data-copy="p1">انسخ</button></div>
+        <pre id="p1">اكتب System Prompt لـElevenLabs Agent اسمه موسى، وحطه في ملف prompts/mousa-system.md في الـrepo.
+
+المطلوب:
+- موسى بيرد على مكالمات عملاء براند اسمه {{brand_name}} (dynamic variable).
+- أول جملة من العميل تحدد لهجته. يرد بنفس اللهجة: سعودي (نجدي/حجازي حسب العميل)، مصري، خليجي، شامي، أو أي لغة تانية.
+- التعريف بعد ما يعرف اللهجة: "وعليكم السلام ورحمة الله وبركاته، معاك موسى من {{brand_name}}، [كيف أقدر أخدمك / أقدر أساعدك إزاي]؟"
+- يعرّف نفسه باسمه بس، ومايقولش من نفسه إنه AI. لكن لو العميل سأل بجد "إنت روبوت؟" يرد بصراحة ولطف ويعرض يحوّله لموظف.
+- جاد ومحدد ويرد على المطلوب بس. لو العميل هزر، يهزر بخفة.
+- العميل المتعصب: يعتذر الأول، ويسمعه للآخر، وبعدين يحل.
+- مايخترعش معلومات. لو حاجة مش في الـknowledge base يقول بثقة إن الفريق المختص هيتواصل معاه خلال {{followup_time}}.
+- يستخدم transfer_to_number لو العميل صمم يكلم موظف بعد محاولة حل.
+- جمل قصيرة مناسبة للكلام في التليفون، من غير قوايم ولا رموز.
+- أرقام وأسعار تتقال بالكلام زي ما الناس بتقولها.
+اكتب كمان قايمة الـdynamic variables المستخدمة.</pre>
+      </div>
+    </div>
+    <figure class="shot">
+      <div class="frame" role="img" aria-label="رسم توضيحي لصفحة إعداد وكيل ElevenLabs">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div class="url">elevenlabs.io/app/agents/agents/…</div></div>
+        <div class="app">
+          <div class="side"><div class="on">Agent</div><div class="hl" data-n="8">Knowledge base</div><div class="hl" data-n="9">Tools</div><div>Analysis</div><div class="hl" data-n="10">Advanced</div><div>Security</div><div>Widget</div></div>
+          <div class="main">
+            <div class="row"><h4>Mousa - Brand</h4><span class="btn ghost hl" data-n="11">Test AI agent</span></div>
+            <div class="card">
+              <div class="lab">Agent language</div><div class="field hl" data-n="5">Arabic ▾  + Additional languages</div>
+              <div class="lab">First message</div><div class="field hl" data-n="3">(empty — agent waits for caller)</div>
+              <div class="lab">System prompt</div><div class="field hl" data-n="4" style="min-height:44px">أنت موسى من {{brand_name}}…</div>
+            </div>
+            <div class="grid2">
+              <div class="card hl" data-n="6"><div class="lab">Voice</div><span>Egyptian male ▾</span></div>
+              <div class="card hl" data-n="7"><div class="lab">LLM</div><span>Fast model ▾</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption>ElevenLabs: الأرقام البرتقالي هي نفس أرقام الخطوات اللي جنبها.</figcaption>
+    </figure>
+  </div>
+
+  <div class="note info">
+    <b>المصري والسعودي إزاي؟</b>
+    <span>موسى بيكتب الرد باللهجة الصح من الـPrompt. أما نبرة الصوت، فهنخلي الموقع يختار صوت سعودي لو رقم المتصل بيبدأ بـ<code>+966</code>، وصوت مصري لو بيبدأ بـ<code>+20</code>. ده بيتعمل في المرحلة و تحت. ملحوظة: في التحويل (call forwarding) بعض شركات الاتصالات بتبعت رقم البراند بدل رقم العميل، فهنجرب ده عملي.</span>
+  </div>
+</section>
+
+<!-- ============ PHASE D CONNECT NUMBER ============ -->
+<section class="station" id="connect">
+  <div class="st-head">
+    <span class="phase">المرحلة د · إنت</span>
+    <h2>اربط رقم Twilio بموسى</h2>
+  </div>
+  <div class="cols">
+    <div>
+      <ol class="steps">
+        <li><span>في ElevenLabs، من القائمة اختار <b>Phone Numbers</b>، واضغط <b>+ Import number ← From Twilio</b>.</span></li>
+        <li><span>املا البيانات: Label <code>اسم البراند</code>، والرقم بالصيغة الدولية (‎+1…)، و<b>SID</b> = الـAPI Key SID، و<b>Token</b> = الـAPI Key Secret.</span></li>
+        <li><span>بعد الـImport، اختار من <b>Agent</b> موسى بتاع البراند، واحفظ. ElevenLabs بيظبط Twilio لوحده.</span></li>
+        <li><span>اتصل بالرقم من موبايلك. لو موسى رد، يبقى المكالمات شغالة.</span></li>
+      </ol>
+      <div class="note" style="margin-top:12px"><b>المكالمة الدولية:</b><span>الاتصال من مصر أو السعودية برقم أمريكي بيتحسب عليك مكالمة دولية. للتجربة استخدم واتساب أو Skype أو أي برنامج اتصال رخيص. وللبراندات بعدين هنشوف أرخص طريقة تحويل.</span></div>
+    </div>
+    <figure class="shot">
+      <div class="frame" role="img" aria-label="رسم توضيحي لاستيراد رقم Twilio في ElevenLabs">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div class="url">elevenlabs.io/app/agents/phone-numbers</div></div>
+        <div class="app">
+          <div class="side"><div>Agents</div><div>Knowledge base</div><div class="on hl" data-n="1">Phone Numbers</div><div>Call history</div><div>Settings</div></div>
+          <div class="main">
+            <div class="row"><h4>Import from Twilio</h4></div>
+            <div class="card hl" data-n="2">
+              <div class="lab">Label</div><div class="field">Brand line</div>
+              <div class="lab">Phone number</div><div class="field">+1 415 •••</div>
+              <div class="grid2"><div><div class="lab">Twilio SID</div><div class="field">SK••••</div></div><div><div class="lab">Twilio Token</div><div class="field">••••••</div></div></div>
+            </div>
+            <div class="card hl" data-n="3"><div class="row"><span>Assigned agent</span><span class="field">Mousa - Brand ▾</span></div></div>
+          </div>
+        </div>
+      </div>
+      <figcaption>ElevenLabs: استيراد الرقم وربطه بموسى.</figcaption>
+    </figure>
+  </div>
+  <div class="note info"><b>نقطة تفتيش:</b><span>لحد هنا عندك موسى بيرد على مكالمات حقيقية لبراند واحد، من غير ولا سطر كود. الجاي هو الـSaaS: براندات كتير ولوحة تحكم وسجل مكالمات.</span></div>
+</section>
+
+<!-- ============ PHASE E SUPABASE ============ -->
+<section class="station" id="supabase">
+  <div class="st-head">
+    <span class="phase">المرحلة هـ · إنت + Claude Code</span>
+    <h2>Supabase: قاعدة البيانات</h2>
+  </div>
+  <div class="cols">
+    <div>
+      <ol class="steps">
+        <li><span>في <a href="https://supabase.com/dashboard" target="_blank" rel="noopener">supabase.com</a> اضغط <b>New project</b>. الاسم <code>mousa</code>، والـRegion <b>Frankfurt (eu-central-1)</b>، واعمل باسورد قوي واحفظه.</span></li>
+        <li><span>من <b>Project Settings ← API Keys</b> انسخ <b>Project URL</b> والـ<b>Secret key</b>.</span></li>
+        <li><span>ابعت الرسالة دي لـClaude Code، وهو يعمل الجداول.</span></li>
+      </ol>
+      <div class="prompt">
+        <div class="ph"><span>رسالة لـClaude Code: قاعدة البيانات</span><button class="copy" type="button" data-copy="p2">انسخ</button></div>
+        <pre id="p2">اعمل Supabase migrations في supabase/migrations لمنصة موسى:
+- brands: الاسم، النشاط، طريقة الكلام، رقم خدمة العملاء، مدة المتابعة، مالك البراند (user_id)
+- phone_numbers: الرقم، brand_id، elevenlabs_agent_id، elevenlabs_phone_number_id
+- brand_knowledge: brand_id، النوع (سؤال شائع/سياسة/منتج)، المحتوى
+- calls: brand_id، رقم المتصل، المدة، اللغة/اللهجة، الملخص، النص الكامل، هل اتحولت لموظف، تقييم الرضا
+- فعّل Row Level Security بحيث كل براند يشوف بياناته بس.
+طبّق الـmigrations على مشروع Supabase المربوط واعمل seed لبراند تجريبي.</pre>
+      </div>
+      <div class="get">
+        <h3>تطلع من هنا بـ:</h3>
+        <div class="kv"><span class="mono">SUPABASE_URL</span><span class="lbl">Project URL</span></div>
+        <div class="kv"><span class="mono">SUPABASE_SECRET_KEY</span><span class="lbl">Secret key</span></div>
+      </div>
+    </div>
+    <figure class="shot">
+      <div class="frame" role="img" aria-label="رسم توضيحي لجداول Supabase">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div class="url">supabase.com/dashboard/project/…/editor</div></div>
+        <div class="app">
+          <div class="side"><div class="on">Table Editor</div><div>SQL Editor</div><div>Auth</div><div class="hl" data-n="2">Settings › API Keys</div></div>
+          <div class="main">
+            <h4>Tables (بعد ما Claude Code يخلص)</h4>
+            <div class="card"><div class="row"><span>brands</span><span class="v">RLS ✓</span></div><div class="row"><span>phone_numbers</span><span class="v">RLS ✓</span></div><div class="row"><span>brand_knowledge</span><span class="v">RLS ✓</span></div><div class="row"><span>calls</span><span class="v">RLS ✓</span></div></div>
+          </div>
+        </div>
+      </div>
+      <figcaption>Supabase: الجداول دي Claude Code هو اللي بيعملها، إنت بتتفرج بس.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ PHASE F CLAUDE CODE ============ -->
+<section class="station" id="claudecode">
+  <div class="st-head">
+    <span class="phase">المرحلة و · إنت + Claude Code</span>
+    <h2>Claude Code: بناء الموقع والـWebhooks</h2>
+    <p class="why">كده بتشتغل مع Claude Code: تكتب طلبك بالعربي، هو يكتب الكود ويرفعه على GitHub، وVercel ينشره تلقائي.</p>
+  </div>
+  <div class="cols">
+    <div>
+      <ol class="steps">
+        <li><span>حط المفاتيح في الخزنة: في <a href="https://claude.ai/code" target="_blank" rel="noopener">claude.ai/code</a> افتح قائمة الـ<b>cloud environment</b> جنب عنوان الجلسة، واضغط <b>Edit</b>، وفي <b>Network secrets</b> (أو Environment variables) ضيف كل المفاتيح بأسمائها من الجدول اللي في آخر الصفحة.</span></li>
+        <li><span>افتح <b>جلسة جديدة</b> واختار الـrepo <code>boody172/Mosaaiagent</code>. المفاتيح بتشتغل في الجلسات الجديدة بس.</span></li>
+        <li><span>ابعت الرسالة دي. Claude Code هيبني ويرفع على فرع، ويقولك إيه اللي اتعمل.</span></li>
+        <li><span>اقرا ملخصه، واطلب أي تعديل بالعربي عادي.</span></li>
+      </ol>
+      <div class="prompt">
+        <div class="ph"><span>رسالة لـClaude Code: الموقع والـWebhooks</span><button class="copy" type="button" data-copy="p3">انسخ</button></div>
+        <pre id="p3">ابني تطبيق Next.js (App Router + TypeScript) في الـrepo لمنصة موسى، يتنشر على Vercel ويستخدم Supabase:
+
+1. Webhook بداية المكالمة: POST /api/elevenlabs/init
+   - يستقبل called_number وcaller_id من ElevenLabs
+   - يجيب البراند من phone_numbers ويرجع dynamic_variables (brand_name, followup_time…)
+   - يختار voice_id سعودي لو caller_id بيبدأ بـ+966، ومصري لو بيبدأ بـ+20، والافتراضي مصري
+   - يتأكد من السر (ELEVENLABS_WEBHOOK_SECRET)، ويرد في أقل من ثانية
+
+2. Webhook نهاية المكالمة: POST /api/elevenlabs/post-call
+   - يتحقق من توقيع ElevenLabs، ويحفظ الملخص والنص والمدة والتحويل في calls
+
+3. لوحة تحكم بالعربي RTL للبراند (Supabase Auth):
+   - بيانات البراند والأسئلة الشائعة
+   - سجل المكالمات بالملخص
+   - إحصائيات بسيطة
+
+4. ملف .env.example بكل المتغيرات، وREADME بالعربي.
+اختبر الـwebhooks محليًا بطلبات تجريبية قبل الرفع.</pre>
+      </div>
+    </div>
+    <figure class="shot">
+      <div class="frame" role="img" aria-label="رسم توضيحي لجلسة Claude Code">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div class="url">claude.ai/code</div></div>
+        <div class="main">
+          <div class="row"><h4 class="hl" data-n="2">boody172/Mosaaiagent</h4><span class="btn ghost hl" data-n="1">☁ Environment ▾</span></div>
+          <div class="card" style="direction:rtl;font-family:var(--f-body)">
+            <div class="lab">إنت</div><div>ابني تطبيق Next.js لمنصة موسى…</div>
+          </div>
+          <div class="card" style="direction:rtl;font-family:var(--f-body)">
+            <div class="lab">Claude Code</div><div>عملت الـwebhooks ولوحة التحكم، واختبرتهم، ورفعتهم على فرع…</div>
+          </div>
+          <div class="field hl" data-n="3">اكتب طلبك هنا…</div>
+        </div>
+      </div>
+      <figcaption>Claude Code: طلب بالعربي، وكود متختبر ومرفوع.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ PHASE G VERCEL ============ -->
+<section class="station" id="vercel">
+  <div class="st-head">
+    <span class="phase">المرحلة ز · إنت</span>
+    <h2>Vercel: انشر الموقع</h2>
+  </div>
+  <div class="cols">
+    <div>
+      <ol class="steps">
+        <li><span>سجّل في <a href="https://vercel.com/signup" target="_blank" rel="noopener">vercel.com</a> بـ<b>Continue with GitHub</b>.</span></li>
+        <li><span><b>Add New… ← Project</b>، واختار <code>Mosaaiagent</code> واضغط <b>Import</b>. الـFramework هيتعرف لوحده (Next.js).</span></li>
+        <li><span>اربط Supabase: من المشروع <b>Settings ← Integrations ← Browse Marketplace</b>، دوّر على <b>Supabase</b> واضغط <b>Add Integration</b>، واختار مشروع <code>mousa</code>. متغيرات Supabase هتتحط لوحدها.</span></li>
+        <li><span>من <b>Settings ← Environment Variables</b> ضيف <code>ELEVENLABS_API_KEY</code> و<code>ELEVENLABS_WEBHOOK_SECRET</code> وأصوات موسى (<code>VOICE_ID_EG</code> و<code>VOICE_ID_SA</code>).</span></li>
+        <li><span>اضغط <b>Deploy</b>. هتاخد لينك زي <code>mousa.vercel.app</code>. بعد كده كل ما Claude Code يرفع كود، Vercel بينشر لوحده.</span></li>
+      </ol>
+      <div class="note info" style="margin-top:12px"><b>فرق مهم:</b><span>الخزنة في Claude Code عشان Claude يشتغل وهو بيبني. ومتغيرات Vercel عشان الموقع الحقيقي يشتغل. نفس المفاتيح بتتحط في المكانين.</span></div>
+    </div>
+    <figure class="shot">
+      <div class="frame" role="img" aria-label="رسم توضيحي لإعدادات مشروع Vercel">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div class="url">vercel.com/…/mosaaiagent/settings</div></div>
+        <div class="app">
+          <div class="side"><div>General</div><div class="hl" data-n="3">Integrations</div><div class="on hl" data-n="4">Environment Variables</div><div>Domains</div><div>Git</div></div>
+          <div class="main">
+            <h4>Environment Variables</h4>
+            <div class="card">
+              <div class="row"><span class="v">SUPABASE_URL</span><span class="lab">from Supabase ✓</span></div>
+              <div class="row"><span class="v">ELEVENLABS_API_KEY</span><span class="lab">••••</span></div>
+              <div class="row"><span class="v">ELEVENLABS_WEBHOOK_SECRET</span><span class="lab">••••</span></div>
+            </div>
+            <div class="row"><span class="lab">Production: mousa.vercel.app</span><span class="btn hl" data-n="5">Deploy</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption>Vercel: Supabase بيتربط تلقائي، والباقي بتضيفه إنت.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ PHASE H WIRE ============ -->
+<section class="station" id="wire">
+  <div class="st-head">
+    <span class="phase">المرحلة ح · إنت</span>
+    <h2>اربط ElevenLabs بالموقع</h2>
+    <p class="why">آخر توصيلة: موسى يسأل الموقع "أنا شغال مع مين؟" أول المكالمة، ويبعتله الملخص في آخرها.</p>
+  </div>
+  <div class="cols">
+    <div>
+      <ol class="steps">
+        <li><span>في ElevenLabs روح <b>Settings</b> بتاعة الـAgents (مش بتاعة الوكيل نفسه). في <b>Conversation initiation client data webhook</b> حط:
+          <span class="sub mono">https://mousa.vercel.app/api/elevenlabs/init</span></span></li>
+        <li><span>في نفس الصفحة، <b>Post-call webhook</b>، حط:
+          <span class="sub mono">https://mousa.vercel.app/api/elevenlabs/post-call</span>
+          انسخ الـ<b>webhook secret</b> اللي هيظهر، وحطه في Vercel باسم <code>ELEVENLABS_WEBHOOK_SECRET</code>.</span></li>
+        <li><span>افتح موسى، وروح <b>Security</b>، وفعّل <b>Fetch initiation client data from webhook</b>. وفي <b>Overrides</b> فعّل <b>Voice</b> عشان الموقع يقدر يغير الصوت.</span></li>
+        <li><span>من <b>Profile ← API Keys</b> اعمل مفتاح ElevenLabs لـ<code>ELEVENLABS_API_KEY</code>.</span></li>
+        <li><span>اتصل من رقم مصري ومن رقم سعودي، وبعدين ادخل لوحة التحكم وشوف المكالمات اتسجلت.</span></li>
+      </ol>
+    </div>
+    <figure class="shot">
+      <div class="frame" role="img" aria-label="رسم توضيحي لإعدادات Webhooks في ElevenLabs">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div class="url">elevenlabs.io/app/agents/settings</div></div>
+        <div class="app">
+          <div class="side"><div>Agents</div><div>Phone Numbers</div><div class="on">Settings</div></div>
+          <div class="main">
+            <div class="card hl" data-n="1"><div class="lab">Conversation initiation webhook</div><div class="field">https://mousa.vercel.app/api/elevenlabs/init</div></div>
+            <div class="card hl" data-n="2"><div class="lab">Post-call webhook</div><div class="field">https://mousa.vercel.app/api/elevenlabs/post-call</div><div class="row"><span class="lab">Secret</span><span class="v">whsec_•••• ⧉</span></div></div>
+            <div class="card hl" data-n="3"><div class="row"><span>Agent › Security › Fetch initiation data</span><span class="toggle"></span></div><div class="row"><span>Overrides › Voice</span><span class="toggle"></span></div></div>
+          </div>
+        </div>
+      </div>
+      <figcaption>ElevenLabs: عنوانين بتوع الموقع، وتفعيل جوه موسى.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ PHASE I NEW BRAND ============ -->
+<section class="station" id="newbrand">
+  <div class="st-head">
+    <span class="phase">المرحلة ط · Claude Code</span>
+    <h2>براند جديد بضغطة زرار</h2>
+    <p class="why">لما الأساس يشتغل، Claude Code يخلي الموقع يعمل كل اللي عملته إنت بإيدك في المرحلة ج ود، لكل براند جديد تلقائي.</p>
+  </div>
+  <div class="prompt">
+    <div class="ph"><span>رسالة لـClaude Code: تشغيل براند جديد تلقائي</span><button class="copy" type="button" data-copy="p4">انسخ</button></div>
+    <pre id="p4">ضيف للوحة التحكم "إضافة براند جديد" فيها أسئلة الـOnboarding كلها (الهوية، المنتجات والأسعار، المواعيد، التوصيل، الدفع، السياسات، الأسئلة الشائعة، الأزمات، الممنوعات، رقم التحويل، ملفات PDF أو رابط الموقع).
+لما البراند يحفظ:
+- اعمل نسخة من موسى في ElevenLabs بالـAPI بنفس إعدادات الوكيل الأساسي، وحط اسم البراند ورقم التحويل
+- ارفع ملفاته للـKnowledge base بتاعته
+- اربط رقم Twilio المتاح ليه
+- احفظ الـIDs في phone_numbers
+وأي تعديل في بيانات البراند يتحدث في ElevenLabs تلقائي.</pre>
+  </div>
+  <div class="prompt">
+    <div class="ph"><span>رسالة لـClaude Code: الاشتراكات والدفع (بعدين)</span><button class="copy" type="button" data-copy="p5">انسخ</button></div>
+    <pre id="p5">ضيف صفحة أسعار وخطط اشتراك شهرية بعدد دقائق (مثلًا 300 / 1000 / 3000 دقيقة)، والدفع بـPaymob لمصر وMoyasar للسعودية. وقّف استقبال المكالمات للبراند لو الدقايق خلصت، وابعتله تنبيه قبلها بـ80%. اعمل لوحة Admin ليا فيها كل البراندات والاستهلاك والتكلفة مقابل الإيراد.</pre>
+  </div>
+</section>
+
+<!-- ============ KEYS ============ -->
+<section class="station" id="keys">
+  <div class="st-head">
+    <h2>كل المفاتيح في جدول واحد</h2>
+    <p class="why">متبعتش أي مفتاح في الشات، ولا تصوّر الشاشة وهو ظاهر.</p>
+  </div>
+  <div class="envtable">
+    <table>
+      <thead><tr><th>الاسم</th><th>من فين</th><th>خزنة Claude Code</th><th>Vercel</th><th></th></tr></thead>
+      <tbody id="envrows"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ CHECKLIST ============ -->
+<section class="station" id="done">
+  <div class="st-head">
+    <h2>قائمة المتابعة</h2>
+    <p class="why">علّم على اللي خلصته. المتصفح بتاعك بيفتكرها.</p>
+  </div>
+  <div class="check" id="checklist">
+    <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+  </div>
+</section>
+
+<!-- ============ TROUBLESHOOT ============ -->
+<section class="station" id="trouble">
+  <div class="st-head"><h2>لو حاجة مش شغالة</h2></div>
+  <dl class="gloss">
+    <dt>المكالمة بتقول "trial account"</dt><dd>حساب Twilio لسه تجريبي. اشحنه من Billing.</dd>
+    <dt>الرقم مش بيرد خالص</dt><dd>في ElevenLabs ← Phone Numbers، اتأكد إن الرقم مربوط بموسى. وفي Twilio، اتأكد إن الرقم عليه خاصية Voice.</dd>
+    <dt>موسى بيرد بالفصحى</dt><dd>قول لـClaude Code: "موسى بيرد بالفصحى، خليه يلتزم باللهجة" وابعتله جملة من المكالمة.</dd>
+    <dt>موسى بيقاطع</dt><dd>زوّد Turn timeout في Advanced، وقول لـClaude Code يزوّد في الـPrompt إنه يستنى.</dd>
+    <dt>المكالمة بتفصل أول ما تبدأ</dt><dd>غالبًا webhook البداية بيرجع غلط أو بطيء. ابعت لـClaude Code: "شوف logs بتاعة Vercel لـ/api/elevenlabs/init".</dd>
+    <dt>التحويل لموظف مش شغال</dt><dd>اتأكد من Geo permissions في Twilio، وإن الرقم مكتوب بالصيغة الدولية.</dd>
+    <dt>زرار مش لاقيه</dt><dd>المواقع بتغير أماكن القوائم. دوّر على نفس الكلمة بالإنجليزي، أو قول لـClaude Code اسم الصفحة اللي إنت فيها.</dd>
+  </dl>
+</section>
+
+<footer>دليل بناء موسى · أكتوبر 2026 · Claude Code + Supabase + Vercel + ElevenLabs + Twilio. أسماء القوائم والأسعار بتتغير، راجع الموقع نفسه لو حاجة مختلفة.</footer>
+</div>
+
+<script>
+const ENV=[
+  ["TWILIO_PHONE_NUMBER","Twilio · Phone Numbers",1,0],
+  ["TWILIO_API_KEY_SID","Twilio · API keys",1,0],
+  ["TWILIO_API_KEY_SECRET","Twilio · API keys",1,0],
+  ["ELEVENLABS_API_KEY","ElevenLabs · API Keys",1,1],
+  ["ELEVENLABS_WEBHOOK_SECRET","ElevenLabs · Post-call webhook",1,1],
+  ["VOICE_ID_EG","ElevenLabs · My Voices",1,1],
+  ["VOICE_ID_SA","ElevenLabs · My Voices",1,1],
+  ["SUPABASE_URL","Supabase · API Keys",1,1],
+  ["SUPABASE_SECRET_KEY","Supabase · API Keys",1,1]
+];
+const tb=document.getElementById('envrows');
+function sel(node){const r=document.createRange();r.selectNodeContents(node);const s=getSelection();s.removeAllRanges();s.addRange(r)}
+function copyText(text,btn,fallbackNode){
+  const label=btn.textContent;
+  const done=()=>{btn.textContent='اتنسخ ✓';setTimeout(()=>btn.textContent=label,1500)};
+  try{navigator.clipboard.writeText(text).then(done).catch(()=>sel(fallbackNode))}catch(_){sel(fallbackNode)}
+}
+ENV.forEach(([k,src,cc,vc])=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><code>${k}</code></td><td>${src}</td><td>${cc?'✓':'—'}</td><td>${vc?(k.startsWith('SUPABASE')?'✓ (تلقائي)':'✓'):'—'}</td><td><button class="copy" type="button">انسخ الاسم</button></td>`;
+  tr.querySelector('button').addEventListener('click',e=>copyText(k,e.currentTarget,tr.querySelector('code')));
+  tb.appendChild(tr);
+});
+document.querySelectorAll('button[data-copy]').forEach(b=>{
+  const pre=document.getElementById(b.dataset.copy);
+  b.addEventListener('click',()=>copyText(pre.textContent,b,pre));
+});
+
+const TASKS=[
+  "فتحت الحسابات الست",
+  "Twilio: شحنت واشتريت رقم Voice",
+  "Twilio: فعّلت Geo permissions لمصر والسعودية",
+  "Twilio: عملت API key (SID + Secret)",
+  "ElevenLabs: عملت موسى وأول رسالة فاضية",
+  "Claude Code كتب شخصية موسى وحطيتها",
+  "ElevenLabs: اخترت صوت مصري وصوت سعودي",
+  "ElevenLabs: رفعت Knowledge base وفعّلت الأدوات",
+  "ElevenLabs: استوردت رقم Twilio وربطته بموسى",
+  "أول مكالمة حقيقية اشتغلت",
+  "Supabase: عملت المشروع وClaude Code عمل الجداول",
+  "حطيت المفاتيح في خزنة Claude Code",
+  "Claude Code بنى الموقع والـWebhooks",
+  "Vercel: نشرت الموقع وربطت Supabase",
+  "ربطت الـWebhooks في ElevenLabs",
+  "جربت من رقم مصري ورقم سعودي والمكالمات اتسجلت"
+];
+const KEY='mousa-build-checks';
+let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(_){}
+const box=document.getElementById('checklist'),bar=document.getElementById('bar');
+function upd(){const c=box.querySelectorAll('input:checked').length;bar.style.width=(c/TASKS.length*100)+'%'}
+TASKS.forEach((t,i)=>{
+  const l=document.createElement('label');
+  l.innerHTML=`<input type="checkbox" id="b${i}"><span>${t}</span>`;
+  const cb=l.querySelector('input');cb.checked=!!saved[i];
+  cb.addEventListener('change',()=>{saved[i]=cb.checked;try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(_){}upd()});
+  box.appendChild(l);
+});
+upd();
+</script>
