@@ -1,0 +1,232 @@
+<title>موسى: النطاق المختصر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a formal RFQ document — one column, numbered clauses, tables for scope and costs, one flow strip and one sample brief card */
+:root{
+  --bg:#f6f7f5; --surface:#ffffff; --ink:#15201d; --muted:#5c6a66; --line:#d8dfdc;
+  --accent:#0d6457; --accent-soft:#e1efeb; --mark:#b8720a; --mark-soft:#fdf0d9;
+  --no:#9a3b1c; --no-soft:#fbe8e0; --code-bg:#eef2f0;
+  --f-display:"Readex Pro","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1715; --surface:#16201e; --ink:#e3ebe8; --muted:#9caba7; --line:#2a3734;
+  --accent:#55c3ae; --accent-soft:#15322c; --mark:#f0a63e; --mark-soft:#3a2b12;
+  --no:#f08c66; --no-soft:#3a2219; --code-bg:#1d2927; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1715; --surface:#16201e; --ink:#e3ebe8; --muted:#9caba7; --line:#2a3734;
+  --accent:#55c3ae; --accent-soft:#15322c; --mark:#f0a63e; --mark-soft:#3a2b12;
+  --no:#f08c66; --no-soft:#3a2219; --code-bg:#1d2927; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.85;direction:rtl;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:900px;margin-inline:auto}
+h1,h2,h3{font-family:var(--f-display);line-height:1.35;text-wrap:balance;margin:0}
+p{margin:0}
+code,.mono{font-family:var(--f-mono);font-size:.86em;direction:ltr;unicode-bidi:isolate}
+code{background:var(--code-bg);padding:1px 6px;border-radius:4px}
+header{padding-block:44px 24px;display:grid;gap:12px;border-bottom:2px solid var(--ink)}
+.kicker{font-size:13px;color:var(--accent);font-weight:600}
+h1{font-size:clamp(28px,4.6vw,40px)}
+.lede{max-width:64ch;color:var(--muted);font-size:17px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+section{padding-block:34px 4px;display:grid;gap:16px}
+h2{font-size:clamp(21px,3vw,26px);display:flex;gap:12px;align-items:baseline}
+h2 .n{font-family:var(--f-mono);font-size:14px;color:var(--accent);font-weight:500;min-width:2.2em}
+h3{font-size:17px}
+.prose{max-width:68ch;display:grid;gap:10px}
+ul.clean{margin:0;padding-inline-start:22px;display:grid;gap:6px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{text-align:right;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-display);font-size:13.5px;color:var(--muted);font-weight:500;background:var(--code-bg)}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.yes{color:var(--accent);font-weight:600}
+.no{color:var(--no);font-weight:600}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:4px;align-content:start}
+.step .who{font-size:11.5px;font-weight:700;color:var(--accent);letter-spacing:.02em}
+.step b{font-family:var(--f-display);font-size:15px}
+.step small{color:var(--muted);font-size:13px;line-height:1.6}
+.step.hub{border-color:var(--mark);background:var(--mark-soft)}
+.step.hub .who{color:var(--mark)}
+.twocol{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:720px){.twocol{grid-template-columns:minmax(0,1fr)}}
+.brief{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:14.5px}
+.brief .top{background:var(--accent);color:var(--surface);padding:10px 14px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:600}
+.brief dl{margin:0;padding:12px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px}
+.brief dt{color:var(--muted)}
+.brief dd{margin:0}
+.brief .sum{padding:0 14px 14px}
+.brief .sum p{background:var(--code-bg);border-radius:8px;padding:10px 12px}
+.chip{display:inline-block;font-size:12px;padding:1px 9px;border-radius:99px;background:var(--mark-soft);color:var(--ink);font-weight:600}
+.chip.ok{background:var(--accent-soft);color:var(--accent)}
+.fields{display:grid;gap:6px}
+.field{display:grid;grid-template-columns:minmax(120px,170px) minmax(0,1fr);gap:10px;padding:8px 12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;font-size:14px}
+.field code{justify-self:start}
+@media (max-width:520px){.field{grid-template-columns:minmax(0,1fr)}}
+.note{padding:12px 16px;border-radius:10px;background:var(--accent-soft);font-size:15px}
+.note.warn{background:var(--no-soft)}
+ol.req{margin:0;padding-inline-start:24px;display:grid;gap:8px}
+.total{display:flex;flex-wrap:wrap;gap:10px}
+.total div{flex:1 1 180px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:2px}
+.total small{color:var(--muted);font-size:13px}
+.total b{font-family:var(--f-display);font-size:20px;font-variant-numeric:tabular-nums}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="kicker">طلب عرض سعر معدّل</div>
+  <h1>موسى: المساعد الصوتي متعدد البراندات، نسخة الإطلاق المختصرة</h1>
+  <p class="lede">نطلب تسعير نسخة أولى أصغر من العرض رقم V1141026، مبنية على ElevenLabs Agents وTwilio وn8n بدل منصة ويب كاملة. الهدف إطلاق الخدمة مع أول براندات خلال 3 أسابيع بأقل تكلفة، ثم بناء البوابة الكاملة لاحقًا من إيرادات التشغيل.</p>
+  <div class="meta"><span>المرجع: <b>عرض كوارزم V1141026</b></span><span>التاريخ: <b>أكتوبر 2026</b></span><span>المدة المستهدفة: <b>15 يوم عمل</b></span></div>
+</header>
+
+<section>
+  <h2><span class="n">01</span>لماذا نسخة مختصرة</h2>
+  <div class="prose">
+    <p>العرض الحالي (35,000 ريال قبل الضريبة) يبني منصة SaaS كاملة: توثيق الشركات، وبوابة دفع، ومخزون أرقام، وتقارير. هذه مكونات مهمة، لكنها تُبنى قبل وجود أي براند مشترك.</p>
+    <p>نريد أولًا إثبات أن البراندات ستدفع مقابل الخدمة. لذلك نطلب بناء <b>المحرك الأساسي فقط</b>: مساعد يرد على المكالمات، ويسجل الطلب، ويرسل للبراند ملخصًا مختصرًا فور انتهاء المكالمة. الإدارة تتم يدويًا وبأدوات جاهزة في هذه المرحلة.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">02</span>المعمارية</h2>
+  <div class="flow" role="list">
+    <div class="step" role="listitem"><span class="who">العميل</span><b>يتصل برقم البراند</b><small>الرقم الأساسي محوّل إلى رقم الاستقبال الخاص بالبراند.</small></div>
+    <div class="step" role="listitem"><span class="who">Twilio</span><b>رقم لكل براند</b><small>مستورد في ElevenLabs ومربوط بمساعد البراند.</small></div>
+    <div class="step" role="listitem"><span class="who">ElevenLabs Agents</span><b>مساعد لكل براند</b><small>سماع، وفهم، ورد صوتي، وقاعدة معرفة، وتحويل لموظف، واستخراج بيانات الطلب.</small></div>
+    <div class="step hub" role="listitem"><span class="who">n8n</span><b>الربط والأتمتة</b><small>يستقبل بيانات المكالمة، ويحدد البراند، ويكتب البريف، ويرسله، ويحفظه.</small></div>
+    <div class="step" role="listitem"><span class="who">Google Sheets</span><b>سجل لكل براند</b><small>جدول مشترك للبراند بالطلبات، وجدول إدارة بالبراندات والاستهلاك.</small></div>
+    <div class="step" role="listitem"><span class="who">البراند</span><b>يستلم البريف</b><small>عبر البريد وTelegram، وWhatsApp لاحقًا.</small></div>
+  </div>
+  <div class="note"><b>ملاحظة تقنية:</b> مساعد مستقل لكل براند في ElevenLabs، فكل براند له قاعدة معرفته ورقمه وصوته. هذا يلغي الحاجة إلى Webhook عند بداية المكالمة، ويقلل نقاط الفشل والتأخير.</div>
+</section>
+
+<section>
+  <h2><span class="n">03</span>النطاق المطلوب</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>البند</th><th>التفاصيل</th></tr></thead>
+    <tbody>
+      <tr><td><b>1. المساعد الأساسي (قالب)</b></td><td>System prompt واحد قابل للتكرار: اللهجة السعودية والمصرية حسب المتصل، والإنجليزية. التعريف باسم "موسى" واسم البراند مع التنبيه بأن المكالمة مسجلة. الصدق إذا سأل المتصل هل هو مساعد آلي. عدم اختراع معلومات. الاعتذار واحتواء المتصل الغاضب. إنهاء المكالمة بلباقة.</td></tr>
+      <tr><td><b>2. إعداد ElevenLabs</b></td><td>أول رسالة فارغة (المساعد ينتظر المتصل)، والتعامل مع المقاطعة، وكشف اللغة، و<code>transfer_to_number</code> لرقم خدمة عملاء البراند، و<code>end_call</code>، وقاعدة معرفة مع RAG، وصوت سعودي وصوت مصري.</td></tr>
+      <tr><td><b>3. حقول استخراج الطلب</b></td><td>Data Collection على كل مساعد (البند 05). البريف يُكتب داخل ElevenLabs نفسه، بدون تكلفة نموذج إضافية.</td></tr>
+      <tr><td><b>4. أداة حفظ الطلب أثناء المكالمة</b></td><td>Server tool باسم <code>save_request</code> تستدعي Webhook في n8n بمجرد تأكيد الطلب، حتى لا يضيع الطلب لو انقطعت المكالمة.</td></tr>
+      <tr><td><b>5. Workflow ما بعد المكالمة (n8n)</b></td><td>استقبال <code>post_call_transcription</code> والتحقق من توقيع HMAC. تحديد البراند من <code>agent_id</code> عبر جدول البراندات. إضافة صف في شيت البراند. إرسال البريف بالبريد وTelegram. وضع علامة على الأسئلة التي لم يجد لها المساعد إجابة.</td></tr>
+      <tr><td><b>6. Workflow إضافة براند</b></td><td>نموذج (Google Form أو Tally) بأسئلة الإعداد. n8n ينسخ المساعد الأساسي عبر ElevenLabs API، ويضع بيانات البراند، ويرفع ملفاته لقاعدة المعرفة، ويربط رقم Twilio، ويسجل الـIDs في جدول البراندات. المراجعة النهائية يدوية من الإدارة.</td></tr>
+      <tr><td><b>7. Workflow الاستهلاك الشهري</b></td><td>جدولة شهرية تجمع دقائق كل مساعد عبر ElevenLabs API، وتحدّث جدول الإدارة، وترسل تنبيهًا عند 80% من باقة البراند.</td></tr>
+      <tr><td><b>8. صفحة تعريفية</b></td><td>صفحة واحدة: الخدمة والباقات وزر تواصل عبر WhatsApp. استضافة مجانية.</td></tr>
+      <tr><td><b>9. اختبار وتسليم</b></td><td>اختبار بلهجة سعودية ومصرية على 3 براندات تجريبية. توثيق مكتوب بالعربية لكل Workflow، وفيديو شرح قصير.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">04</span>خارج النطاق في هذه المرحلة</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>بند في العرض الأصلي</th><th>البديل المؤقت</th></tr></thead>
+    <tbody>
+      <tr><td>بوابة الشركات وتسجيل OTP والتوثيق بالسجل التجاري</td><td>نموذج إعداد، ومراجعة يدوية من الإدارة</td></tr>
+      <tr><td>بوابة الدفع والفواتير الآلية</td><td>روابط دفع (Moyasar أو Tap أو Paymob) وفاتورة شهرية يدوية</td></tr>
+      <tr><td>مخزون الأرقام وخط SIP سعودي بـ1,150 ريال شهريًا</td><td>رقم Twilio لكل براند، والانتقال لخط SIP عند تجاوز 10 براندات</td></tr>
+      <tr><td>لوحة تحكم الإدارة</td><td>جدول البراندات والاستهلاك في Google Sheets</td></tr>
+      <tr><td>صفحات المكالمات والطلبات والتقارير للبراند</td><td>شيت مشترك لكل براند (عرض فقط)، مع روابط التسجيل والنص</td></tr>
+      <tr><td>Laravel وFlutter واستضافة DigitalOcean</td><td>غير مطلوبة</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">05</span>البريف المختصر لكل طلب</h2>
+  <div class="prose"><p>كل مساعد براند يحمل نفس حقول الاستخراج. ElevenLabs يملؤها من نص المكالمة بعد انتهائها، وn8n يرتّبها في قالب ثابت ويرسلها للبراند الصحيح.</p></div>
+  <div class="twocol">
+    <div class="fields" aria-label="حقول Data Collection">
+      <div class="field"><code>customer_name</code><span>اسم المتصل كما ذكره</span></div>
+      <div class="field"><code>callback_number</code><span>رقم التواصل، ويعيده المساعد رقمًا رقمًا للتأكيد</span></div>
+      <div class="field"><code>request_type</code><span>من قائمة البراند: حجز، استفسار سعر، شكوى، طلب تواصل…</span></div>
+      <div class="field"><code>request_details</code><span>التفاصيل في جملة أو جملتين</span></div>
+      <div class="field"><code>urgency</code><span>عادي / مهم / عاجل</span></div>
+      <div class="field"><code>sentiment</code><span>راضٍ / محايد / غاضب</span></div>
+      <div class="field"><code>preferred_time</code><span>الوقت المناسب لعودة الاتصال، إن ذُكر</span></div>
+      <div class="field"><code>unanswered_questions</code><span>أسئلة لم يجد المساعد إجابتها، لتُضاف لقاعدة المعرفة</span></div>
+      <div class="field"><code>brief_ar</code><span>ملخص بالعربية في سطرين، موجه لموظف البراند</span></div>
+      <div class="field"><code>transferred</code><span>هل حُوّلت المكالمة لموظف</span></div>
+    </div>
+    <figure class="brief" aria-label="مثال على البريف المرسل للبراند" style="margin:0">
+      <div class="top"><span>🔔 طلب جديد · عيادات النخبة</span><span>17 أكتوبر · 4:12 م</span></div>
+      <dl>
+        <dt>الاسم</dt><dd>عبدالله القحطاني</dd>
+        <dt>الرقم</dt><dd class="mono">0551234567</dd>
+        <dt>النوع</dt><dd>حجز موعد <span class="chip">مهم</span></dd>
+        <dt>الوقت المفضل</dt><dd>الأحد بعد العصر</dd>
+        <dt>حالة العميل</dt><dd><span class="chip ok">راضٍ</span></dd>
+        <dt>المدة</dt><dd>2:48 دقيقة · لم يُحوّل</dd>
+      </dl>
+      <div class="sum"><p><b>الملخص:</b> يرغب في موعد تنظيف أسنان لابنه، ويسأل إن كان التأمين (بوبا) مقبولًا. أُبلغ أن الموعد مبدئي وستتواصل العيادة للتأكيد.</p></div>
+      <div class="sum"><p><b>سؤال بلا إجابة:</b> هل تقبلون تأمين بوبا؟</p></div>
+    </figure>
+  </div>
+  <p style="color:var(--muted);font-size:14px">مثال توضيحي ببيانات وهمية.</p>
+</section>
+
+<section>
+  <h2><span class="n">06</span>الجدول الزمني</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>الأسبوع</th><th>المخرجات</th><th>الدفعة</th></tr></thead>
+    <tbody>
+      <tr><td class="num">الأسبوع 1</td><td>مساعد أول براند يرد على رقم Twilio حقيقي، واختبار اللهجتين، وموافقة صاحب المشروع على الصوت والأسلوب</td><td class="num">30% عند البدء</td></tr>
+      <tr><td class="num">الأسبوع 2</td><td>Workflows ما بعد المكالمة وحفظ الطلب والتحويل لموظف، والبريف يصل بالبريد وTelegram</td><td class="num">40% بعد القبول</td></tr>
+      <tr><td class="num">الأسبوع 3</td><td>Workflow إضافة براند، والاستهلاك الشهري، والصفحة التعريفية، والاختبار على 3 براندات، والتوثيق</td><td class="num">30% عند التسليم</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">07</span>معايير القبول</h2>
+  <ol class="req">
+    <li>المساعد لا يتكلم قبل المتصل، ويتوقف عن الكلام فور مقاطعته.</li>
+    <li>زمن الرد بعد انتهاء كلام المتصل لا يتجاوز ثانية ونصف تقريبًا في 9 من كل 10 ردود.</li>
+    <li>يلتزم باللهجة السعودية مع المتصل السعودي، والمصرية مع المصري، في 20 مكالمة اختبار متفق على سيناريوهاتها.</li>
+    <li>لا يذكر أي سعر أو معلومة غير موجودة في بيانات البراند.</li>
+    <li>التحويل لموظف يعمل عند إصرار المتصل.</li>
+    <li>البريف يصل للبراند الصحيح خلال دقيقتين من انتهاء المكالمة، في 100% من مكالمات الاختبار.</li>
+    <li>إضافة براند جديد من النموذج حتى أول مكالمة ناجحة في أقل من ساعة.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="n">08</span>تكاليف التشغيل التقديرية</h2>
+  <div class="prose"><p>يدفعها صاحب المشروع مباشرة للمزودين، وكل الحسابات باسمه. الأسعار تقريبية من صفحات المزودين وأدلة 2026، وتتغير.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>البند</th><th>شهريًا</th><th>ملاحظة</th></tr></thead>
+    <tbody>
+      <tr><td>ElevenLabs Creator</td><td class="num">≈ 22$ (82 ريال)</td><td>10 مكالمات متزامنة، والترقية لـPro (20 متزامنة) عند الحاجة</td></tr>
+      <tr><td>دقيقة المكالمة (ElevenLabs + النموذج)</td><td class="num">≈ 0.34 ريال</td><td>نفس رقم العرض الأصلي، ويُحمّل على باقة البراند</td></tr>
+      <tr><td>n8n Community على VPS</td><td class="num">≈ 5–7$ (19–26 ريال)</td><td>أو n8n Cloud Starter بحوالي 24€</td></tr>
+      <tr><td>رقم Twilio لكل براند</td><td class="num">من 1.15$ للرقم</td><td>الرقم السعودي يحتاج مستندات تنظيمية، ودقائق الاستقبال حسب تسعير Twilio</td></tr>
+      <tr><td>Google Sheets، Telegram، البريد، الصفحة التعريفية</td><td class="num">0</td><td>WhatsApp لاحقًا برسوم الرسالة</td></tr>
+    </tbody>
+  </table></div>
+  <div class="total">
+    <div><small>الثابت الشهري قبل أي مكالمة</small><b>≈ 110–150 ريال</b></div>
+    <div><small>مقابل الثابت في العرض الأصلي</small><b>≈ 1,520 ريال</b></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">09</span>المطلوب في العرض المعدّل</h2>
+  <ul class="clean">
+    <li>سعر إجمالي ثابت للنطاق في البند 03 فقط، شامل الضريبة.</li>
+    <li>3 أشهر دعم وإصلاح أخطاء بعد التسليم، وسعر الساعة لأي تعديل بعدها.</li>
+    <li>كل الحسابات (ElevenLabs وTwilio وn8n وGoogle) باسم صاحب المشروع من أول يوم، وتصدير كل Workflows بصيغة JSON مع التسليم.</li>
+    <li>تسعير منفصل اختياري للمرحلة الثانية (بوابة الشركات والدفع الآلي)، تُنفذ بعد الوصول إلى 10 براندات مشتركة.</li>
+  </ul>
+</section>
+
+<footer>موسى · طلب عرض معدّل · أكتوبر 2026. أسعار المزودين تقريبية ومصدرها صفحات التسعير وأدلة منشورة في 2026.</footer>
+</div>
